@@ -10,7 +10,7 @@ class TweetController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Tweets\Index', [
+        return Inertia::render('Tweets/Index', [
             'tweets' => Tweet::with('user:id,name')->latest()->get(),
         ]);
     }
@@ -23,6 +23,6 @@ class TweetController extends Controller
 
         $request->user()->tweets()->create($validated);
 
-        return redirect(route('tweet.index'));
+        return redirect(route('tweets.index'));
     }
 }
