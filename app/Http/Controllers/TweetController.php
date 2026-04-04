@@ -25,4 +25,15 @@ class TweetController extends Controller
 
         return redirect(route('tweets.index'));
     }
+
+    public function destroy(Tweet $tweet)
+    {
+        if ($tweet->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $tweet->delete();
+
+        return redirect(route('tweets.index'));
+    }
 }

@@ -1,20 +1,18 @@
-import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { useForm, Head } from '@inertiajs/react';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
+import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import InputError from "@/Components/InputError";
+import PrimaryButton from "@/Components/PrimaryButton";
+import { useForm, Head, router } from '@inertiajs/react';
 
 export default function Index({ auth, tweets }) {
-    // Inertia専用のフォーム管理フック
     const { data, setData, post, processing, reset, errors } = useForm({
         message: '',
     });
 
     const submit = (e) => {
         e.preventDefault();
-        // TweetControllerのstoreメソッドへ飛ばす
-        post(route('tweets.store'), { 
-            onSuccess: () => reset() // 成功したら入力欄を空にする
+        post(route('tweets.store'), {
+            onSuccess: () => reset()
         });
     };
 
@@ -49,6 +47,20 @@ export default function Index({ auth, tweets }) {
                                             {new Date(tweet.created_at).toLocaleString()}
                                         </small>
                                     </div>
+
+                                    {tweet.user.id === auth.user.id && (
+                                        <button
+                                            className="text-sm text-red-600 hover:text-red-900"
+                                            onClick={() => {
+                                                if (confirm('本当に削除しますか？')) {
+                                                    router.delete(route('tweets.destroy', tweet.id));
+                                                }
+                                            }}
+                                        >
+                                            削除
+                                        </button>
+                                    )}
+
                                 </div>
                                 <p className="mt-4 text-lg text-gray-900">{tweet.message}</p>
                             </div>
